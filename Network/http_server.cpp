@@ -39,29 +39,36 @@ void http_res(int sockfd){
   sscanf(buf, "%s %s %s", method, uri_addr, http_ver);
 
   /* filter by Method */
-  if(strcmp(method, "GET") != 0){
-    send_msg(sockfd, "501 Not Implemented.");
-    close(read_fd);
-    return;
-  }
+  if(strcmp(method, "GET") == 0){
+    uri_file = uri_addr + 1;
+    if((read_fd = open(uri_file, O_RDONLY, 0666)) == -1){
+      send_msg(sockfd, "404 Not Found");
+      close(read_fd);
+      std::cerr << "GET: 404 Not Found" << std::endl;
+      return;
+    }
 
-  uri_file = uri_addr + 1;
-  if((read_fd = open(uri_file, O_RDONLY, 0666)) == -1){
-    send_msg(sockfd, "404 Not Found");
-    close(read_fd);
-    return;
-  }
+    /* send header */
+    send_msg(sockfd, "HTTP/1.0 200OK\r\n");
+    send_msg(sockfd, "Content-Type: text/html\r\n");
 
-  /* send header */
-  send_msg(sockfd, "HTTP/1.0 200OK\r\n");
-  send_msg(sockfd, "Content-Type: text/html\r\n");
+    send_msg(sockfd, "\r\n");
 
-  send_msg(sockfd, "\r\n");
+    /* send body */
+    while((len = read(read_fd, buf, 1024)) > 0){
+      if(send_msg(sockfd, buf) != len){
+        break;
+      }
+    }
 
-  /* send body */
-  while((len = read(read_fd, buf, 1024)) > 0){
-    if(send_msg(sockfd, buf) != len){
-      break;
+    std::cerr << "GET: 200" << std::endl;
+
+  }else{
+    if(strcmp(method, "GET") != 0){
+      send_msg(sockfd, "501 Not Implemented.");
+      close(read_fd);
+      std::cerr << "501 Not Implemented." << std::endl;
+      return;
     }
   }
 
