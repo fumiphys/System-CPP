@@ -9,6 +9,8 @@
 #include <unistd.h>
 
 const int IN_PORT = 3000;
+const char msg[15] = "HTTP1.1 200 OK";
+const char eof[2] = "\n";
 
 
 int main(int argc, char const* argv[])
@@ -49,10 +51,11 @@ int main(int argc, char const* argv[])
   while(1){
     if((write_socket = accept(read_socket, (struct sockaddr*)&write_addr, (socklen_t*)&write_len)) < 0){
       std::cerr << "failed to accept" << std::endl;
-      exit(1);
+      break;
     }
 
-    write(write_socket, "HTTP1.1 200 OK", 14);
+    write(write_socket, msg, strlen(msg));
+    write(write_socket, eof, strlen(eof));
     close(write_socket);
   }
   close(read_socket);
