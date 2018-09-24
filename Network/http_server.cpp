@@ -11,7 +11,7 @@
 
 const int IN_PORT = 3000;
 
-int send_msg(int fd, char *msg){
+int send_msg(int fd, const char *msg){
   int len = strlen(msg);
   if(write(fd, msg, len) != len){
     std::cerr << "failed to write" << std::endl;
@@ -22,7 +22,7 @@ int send_msg(int fd, char *msg){
 
 void http_res(int sockfd){
   int len;
-  int read_fd;
+  int read_fd = -1;
 
   char buf[1024];
   char method[1024];

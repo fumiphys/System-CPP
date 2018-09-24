@@ -9,9 +9,15 @@
 #include <unistd.h>
 
 const int IN_PORT = 3000;
-const char msg[15] = "HTTP1.1 200 OK";
-const char eof[2] = "\n";
 
+int send_msg(int fd, const char *msg){
+  int len = strlen(msg);
+  if(write(fd, msg, len) != len){
+    std::cerr << "failed to write" << std::endl;
+  }
+
+  return len;
+}
 
 int main(int argc, char const* argv[])
 {
@@ -54,8 +60,7 @@ int main(int argc, char const* argv[])
       break;
     }
 
-    write(write_socket, msg, strlen(msg));
-    write(write_socket, eof, strlen(eof));
+    send_msg(write_socket, "RES 200 OK\r\n");
     close(write_socket);
   }
   close(read_socket);
