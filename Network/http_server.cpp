@@ -33,7 +33,6 @@ void http_res(int sockfd){
   /* read request */
   if(read(sockfd, buf, 1024) <= 0){
     std::cerr << "failed to read" << std::endl;
-    exit(1);
   }
 
   /* get method, uri, version */
