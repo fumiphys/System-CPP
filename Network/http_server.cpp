@@ -29,6 +29,7 @@ void http_res(int sockfd){
   char uri_addr[256];
   char http_ver[64];
   char *uri_file;
+  char default_file[11] = "index.html";
 
   /* read request */
   if(read(sockfd, buf, 1024) <= 0){
@@ -41,6 +42,10 @@ void http_res(int sockfd){
   /* filter by Method */
   if(strcmp(method, "GET") == 0){
     uri_file = uri_addr + 1;
+    if(strlen(uri_addr) == 1 && uri_addr[0] == '/'){
+      uri_file = default_file;
+    }
+
     if((read_fd = open(uri_file, O_RDONLY, 0666)) == -1){
       send_msg(sockfd, "404 Not Found");
       close(read_fd);
