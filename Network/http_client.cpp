@@ -59,7 +59,7 @@ int main(int argc, char const* argv[])
     read_size = read(write_socket, buf, BUF_SIZE);
 
     if(read_size > 0){
-      std::cout << "OK" << std::endl;
+      printf("%s", buf);
     }else{
       break;
     }
