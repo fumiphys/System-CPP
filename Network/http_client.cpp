@@ -4,12 +4,12 @@
  */
 
 #include <iostream>
+#include <netdb.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <sys/fcntl.h>
 #include <unistd.h>
 
-const int TO_PORT = 3000;
 const int BUF_SIZE = 1024;
 
 int send_msg(int fd, const char *msg){
@@ -24,33 +24,42 @@ int send_msg(int fd, const char *msg){
 int main(int argc, char const* argv[])
 {
   int write_socket;
-  struct sockaddr_in write_addr;
+  struct addrinfo hints, *res;
+
+  const char *host = "127.0.0.1";
+  const char *path = "/";
 
   /* initialize */
   memset(&write_socket, 0, sizeof(write_socket));
 
-  /* address config (to: 127.0.0.1) */
-  write_addr.sin_family = AF_INET;
-  write_addr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
-  write_addr.sin_port = htons(TO_PORT);
+  /* address config */
+  memset(&hints, 0, sizeof(hints));
+  hints.ai_family = AF_INET;
+  hints.ai_socktype = SOCK_STREAM;
+  char service[6] = "3000";
+
+  if(getaddrinfo(host, service, &hints, &res) != 0){
+    std::cerr << "failed to get address info." << std::endl;
+    exit(1);
+  }
 
   /* socket */
-  write_socket = socket(AF_INET, SOCK_STREAM, 0);
+  write_socket = socket(res->ai_family, res->ai_socktype, res->ai_protocol < 0);
   if(write_socket < 0){
     std::cerr << "failed to make socket" << std::endl;
     exit(1);
   }
 
   /* connect */
-  if(connect(write_socket, (struct sockaddr*)&write_addr, sizeof(struct sockaddr))){
+  if(connect(write_socket, res->ai_addr, res->ai_addrlen) != 0){
     std::cerr << "failed to connect to host." << std::endl;
     exit(1);
   }
 
   /* send message */
-  send_msg(write_socket, "GET / HTTP/1.1\r\n");
-  send_msg(write_socket, "Content-Length: 0\r\n");
-  send_msg(write_socket, "\r\n");
+  char msg[100];
+  sprintf(msg, "GET %s HTTP/1.0\r\nHost: %s\r\n\r\n", path, host);
+  send_msg(write_socket, msg);
 
   /* receive response */
   while(1){
