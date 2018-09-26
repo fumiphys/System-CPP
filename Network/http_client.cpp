@@ -36,7 +36,7 @@ int main(int argc, char const* argv[])
   memset(&hints, 0, sizeof(hints));
   hints.ai_family = AF_INET;
   hints.ai_socktype = SOCK_STREAM;
-  char service[6] = "3000";
+  const char *service = "3000";
 
   if(getaddrinfo(host, service, &hints, &res) != 0){
     std::cerr << "failed to get address info." << std::endl;
