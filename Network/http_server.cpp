@@ -1,5 +1,5 @@
 /*
- * socket server
+ * http server
  * author: fumiphys
  */
 
