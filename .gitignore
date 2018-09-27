@@ -37,3 +37,5 @@ build/
 *.key
 *.crt
 *.csr
+
+test/c_server/files
