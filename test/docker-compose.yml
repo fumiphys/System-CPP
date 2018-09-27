@@ -1,0 +1,6 @@
+c_server:
+  build: ./c_server
+  container_name: c_serv
+  restart: always
+  ports:
+    - 3000:3000
