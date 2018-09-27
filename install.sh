@@ -7,3 +7,5 @@ mkdir -p build && cd build
 cmake ..
 make
 cp ../Network/index.html .
+cp ../Network/https_server.key .
+cp ../Network/https_server.crt .
