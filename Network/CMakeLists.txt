@@ -13,3 +13,4 @@ add_executable(http_client http_client.cpp)
 add_executable(https_client https_client.cpp)
 
 target_link_libraries(https_client OpenSSL::SSL)
+target_link_libraries(https_client OpenSSL::Crypto)
