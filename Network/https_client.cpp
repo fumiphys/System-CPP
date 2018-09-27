@@ -28,8 +28,8 @@ int main(int argc, char const* argv[])
   int write_socket;
   struct addrinfo hints, *res;
 
-  const char *host = "github.com";
-  const char *path = "/fumiphys";
+  const char *host = "127.0.0.1";
+  const char *path = "/";
 
   SSL *ssl;
   SSL_CTX *ctx;
@@ -41,7 +41,7 @@ int main(int argc, char const* argv[])
   memset(&hints, 0, sizeof(hints));
   hints.ai_family = AF_INET;
   hints.ai_socktype = SOCK_STREAM;
-  const char *service = "https";
+  const char *service = "3000";
 
   if(getaddrinfo(host, service, &hints, &res) != 0){
     std::cerr << "failed to get address info." << std::endl;
@@ -82,8 +82,8 @@ int main(int argc, char const* argv[])
   /* receive response */
   while(1){
     char buf[BUF_SIZE];
+    memset(buf, 0, sizeof(buf));
     int read_size = SSL_read(ssl, buf, BUF_SIZE - 1);
-    std::cout << "aaaa " << read_size << std::endl;
 
     if(read_size > 0){
       printf("%s", buf);

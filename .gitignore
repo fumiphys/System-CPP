@@ -33,3 +33,7 @@
 
 # build
 build/
+
+*.key
+*.crt
+*.csr
