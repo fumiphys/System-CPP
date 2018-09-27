@@ -19,6 +19,7 @@ cp ../Network/https_server.key .
 cp ../Network/https_server.crt .
 cd ..
 
+mkdir -p test/c_server/files
 cp Network/index.html test/c_server/files/
 cp build/Network/http_server test/c_server/files/
 cp build/Network/https_server test/c_server/files/
