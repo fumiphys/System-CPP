@@ -7,3 +7,12 @@ nc localhost 3000
 ```
 curl "http://localhost:3000/index.html"
 ```
+
+## https_server  : https connection
+```
+./Network/https_client
+```
+
+# TODO
+- speed up
+- threading
