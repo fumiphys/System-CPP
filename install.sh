@@ -5,6 +5,7 @@
 
 if [ ! -e Network/https_server.key ];then
   cd Network
+  chmod +x certificate.sh
   ./certificate.sh
   cd ..
 fi
