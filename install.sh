@@ -3,6 +3,9 @@
 # author: fumiphys
 # type `./install.sh`
 
+cd Network
+./certificate.sh
+cd ..
 mkdir -p build && cd build
 cmake ..
 make
