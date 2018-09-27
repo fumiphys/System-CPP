@@ -3,11 +3,14 @@
 # author: fumiphys
 # type `./install.sh`
 
-cd Network
-./certificate.sh
-cd ..
+if [ ! -e Network/https_server.key ];then
+  cd Network
+  ./certificate.sh
+  cd ..
+fi
 mkdir -p build && cd build
 cmake ..
+make clean
 make
 cp ../Network/index.html .
 cp ../Network/https_server.key .
