@@ -6,3 +6,10 @@ C++ functions for Network, DB...
 ```
 ./install.sh
 ```
+
+# test
+```
+cd test
+sudo docker-compose up -d
+(to stop: sudo docker-compose down)
+```
