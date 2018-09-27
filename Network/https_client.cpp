@@ -29,7 +29,7 @@ int main(int argc, char const* argv[])
   struct addrinfo hints, *res;
 
   const char *host = "github.com";
-  const char *path = "/";
+  const char *path = "/fumiphys";
 
   SSL *ssl;
   SSL_CTX *ctx;
@@ -76,14 +76,14 @@ int main(int argc, char const* argv[])
 
   /* send message */
   char msg[100];
-  sprintf(msg, "GET %s HTTP/1.1\r\nHost: %s\r\n\r\n", path, host);
+  sprintf(msg, "GET %s HTTP/1.0\r\nHost: %s\r\n\r\n", path, host);
   send_msg(ssl, msg);
 
   /* receive response */
   while(1){
     char buf[BUF_SIZE];
-    int read_size;
-    read_size = SSL_read(ssl, buf, BUF_SIZE);
+    int read_size = SSL_read(ssl, buf, BUF_SIZE - 1);
+    std::cout << "aaaa " << read_size << std::endl;
 
     if(read_size > 0){
       printf("%s", buf);

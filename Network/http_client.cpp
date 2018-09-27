@@ -65,7 +65,7 @@ int main(int argc, char const* argv[])
   while(1){
     char buf[BUF_SIZE];
     int read_size;
-    read_size = read(write_socket, buf, BUF_SIZE);
+    read_size = read(write_socket, buf, BUF_SIZE - 1);
 
     if(read_size > 0){
       printf("%s", buf);
