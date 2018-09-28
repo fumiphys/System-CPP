@@ -16,6 +16,7 @@ const int BUF_SIZE = 1024;
 int send_msg(int fd, const char *msg){
   int len = strlen(msg);
   if(write(fd, msg, len) != len){
+    perror("write");
     std::cerr << "failed to write" << std::endl;
   }
 
@@ -40,6 +41,7 @@ int main(int argc, char const* argv[])
   const char *service = "3000";
 
   if(getaddrinfo(host, service, &hints, &res) != 0){
+    perror("get address info");
     std::cerr << "failed to get address info." << std::endl;
     exit(1);
   }
@@ -47,12 +49,14 @@ int main(int argc, char const* argv[])
   /* socket */
   write_socket = socket(res->ai_family, res->ai_socktype, res->ai_protocol < 0);
   if(write_socket < 0){
+    perror("socket");
     std::cerr << "failed to make socket" << std::endl;
     exit(1);
   }
 
   /* connect */
   if(connect(write_socket, res->ai_addr, res->ai_addrlen) != 0){
+    perror("connect");
     std::cerr << "failed to connect to host." << std::endl;
     exit(1);
   }

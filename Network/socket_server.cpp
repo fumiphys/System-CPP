@@ -14,6 +14,7 @@ const int IN_PORT = 3000;
 int send_msg(int fd, const char *msg){
   int len = strlen(msg);
   if(write(fd, msg, len) != len){
+    perror("write");
     std::cerr << "failed to write" << std::endl;
   }
 
@@ -38,18 +39,21 @@ int main(int argc, char const* argv[])
   /* socket */
   read_socket = socket(AF_INET, SOCK_STREAM, 0);
   if(read_socket < 0){
+    perror("socket");
     std::cerr << "failed to make socket" << std::endl;
     exit(1);
   }
 
   /* bind socket */
   if(bind(read_socket, (struct sockaddr *)&read_addr, sizeof(read_addr)) < 0){
+    perror("bind");
     std::cerr << "failed to bind socket" << std::endl;
     exit(1);
   }
 
   /* listen */
   if(listen(read_socket, 5) < 0){
+    perror("listen");
     std::cerr << "failed to listen" << std::endl;
     exit(1);
   }
@@ -57,6 +61,7 @@ int main(int argc, char const* argv[])
   /* wait connection */
   while(1){
     if((write_socket = accept(read_socket, (struct sockaddr*)&write_addr, (socklen_t*)&write_len)) < 0){
+      perror("accept");
       std::cerr << "failed to accept" << std::endl;
       break;
     }

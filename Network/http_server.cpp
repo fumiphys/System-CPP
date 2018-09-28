@@ -15,6 +15,7 @@ const int IN_PORT = 3000;
 int send_msg(int fd, const char *msg){
   int len = strlen(msg);
   if(write(fd, msg, len) != len){
+    perror("send message");
     std::cerr << "failed to write" << std::endl;
   }
 
@@ -34,6 +35,7 @@ void http_res(int sockfd){
 
   /* read request */
   if(read(sockfd, buf, 1024) <= 0){
+    perror("read");
     std::cerr << "failed to read" << std::endl;
   }
 
@@ -48,6 +50,7 @@ void http_res(int sockfd){
     }
 
     if((read_fd = open(uri_file, O_RDONLY, 0666)) == -1){
+      perror("open file");
       send_msg(sockfd, "404 Not Found");
       close(read_fd);
       std::cerr << "GET: 404 Not Found" << std::endl;
@@ -87,6 +90,7 @@ int main(int argc, char const* argv[])
   int read_socket, write_socket;
   struct sockaddr_in read_addr, write_addr;
   int write_len;
+  bool yes = 1;
 
   /* initialize */
   memset(&read_socket, 0, sizeof(read_socket));
@@ -100,18 +104,24 @@ int main(int argc, char const* argv[])
   /* socket */
   read_socket = socket(AF_INET, SOCK_STREAM, 0);
   if(read_socket < 0){
+    perror("socket");
     std::cerr << "failed to make socket" << std::endl;
     exit(1);
   }
 
+  setsockopt(read_socket, SOL_SOCKET, SO_REUSEADDR,
+      (const char *)&yes, sizeof(yes));
+
   /* bind socket */
   if(bind(read_socket, (struct sockaddr *)&read_addr, sizeof(read_addr)) < 0){
+    perror("bind socket");
     std::cerr << "failed to bind socket" << std::endl;
     exit(1);
   }
 
   /* listen */
   if(listen(read_socket, 5) < 0){
+    perror("listen");
     std::cerr << "failed to listen" << std::endl;
     exit(1);
   }
@@ -119,6 +129,7 @@ int main(int argc, char const* argv[])
   /* wait connection */
   while(1){
     if((write_socket = accept(read_socket, (struct sockaddr*)&write_addr, (socklen_t*)&write_len)) < 0){
+      perror("accept");
       std::cerr << "failed to accept" << std::endl;
       exit(1);
     }

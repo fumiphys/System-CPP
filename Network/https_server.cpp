@@ -19,6 +19,7 @@ const int BUF_SIZE = 1024;
 int send_msg(SSL *ssl, const char *msg){
   int len = strlen(msg);
   if(SSL_write(ssl, msg, len) != len){
+    perror("ssl write");
     std::cerr << "failed to write" << std::endl;
   }
 
@@ -38,6 +39,7 @@ void https_res(SSL *ssl){
 
   /* read request */
   if(SSL_read(ssl, buf, BUF_SIZE - 1) <= 0){
+    perror("ssl read");
     std::cerr << "failed to read" << std::endl;
   }
 
@@ -52,6 +54,7 @@ void https_res(SSL *ssl){
     }
 
     if((read_fd = open(uri_file, O_RDONLY, 0666)) == -1){
+      perror("open file");
       send_msg(ssl, "404 Not Found");
       close(read_fd);
       std::cerr << "GET: 404 Not Found" << std::endl;
@@ -91,6 +94,7 @@ int main(int argc, char const* argv[])
   int read_socket, write_socket;
   struct sockaddr_in read_addr, write_addr;
   int write_len;
+  bool yes = 1;
 
   SSL_CTX *ctx;
   SSL *ssl;
@@ -118,18 +122,24 @@ int main(int argc, char const* argv[])
   /* socket */
   read_socket = socket(AF_INET, SOCK_STREAM, 0);
   if(read_socket < 0){
+    perror("socket");
     std::cerr << "failed to make socket" << std::endl;
     exit(1);
   }
 
+  setsockopt(read_socket, SOL_SOCKET, SO_REUSEADDR,
+      (const char *)&yes, sizeof(yes));
+
   /* bind socket */
   if(bind(read_socket, (struct sockaddr *)&read_addr, sizeof(read_addr)) < 0){
+    perror("bind");
     std::cerr << "failed to bind socket" << std::endl;
     exit(1);
   }
 
   /* listen */
   if(listen(read_socket, 5) < 0){
+    perror("listen");
     std::cerr << "failed to listen" << std::endl;
     exit(1);
   }
@@ -137,6 +147,7 @@ int main(int argc, char const* argv[])
   /* wait connection */
   while(1){
     if((write_socket = accept(read_socket, (struct sockaddr*)&write_addr, (socklen_t*)&write_len)) < 0){
+      perror("accept");
       std::cerr << "failed to accept" << std::endl;
       exit(1);
     }
