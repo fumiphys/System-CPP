@@ -75,6 +75,7 @@ int main(int argc, char const* argv[])
     }
   }
 
+  freeaddrinfo(res);
   close(write_socket);
 
   return 0;

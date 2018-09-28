@@ -98,6 +98,7 @@ int main(int argc, char const* argv[])
   SSL_CTX_free(ctx);
   ERR_free_strings();
 
+  freeaddrinfo(res);
   close(write_socket);
 
   return 0;
