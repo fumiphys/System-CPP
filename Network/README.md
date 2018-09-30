@@ -14,5 +14,6 @@ curl "http://localhost:3000/index.html"
 ```
 
 # TODO
+- non blocking mode (currently use sleep)
 - speed up
 - threading

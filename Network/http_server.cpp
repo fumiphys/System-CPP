@@ -8,6 +8,7 @@
 #include <string.h>
 #include <sys/socket.h>
 #include <sys/fcntl.h>
+#include <sys/ioctl.h>
 #include <unistd.h>
 
 const int IN_PORT = 3000;
@@ -119,6 +120,10 @@ int main(int argc, char const* argv[])
     exit(1);
   }
 
+  /* non blocking mode */
+  int val = 1;
+  ioctl(read_socket, FIONBIO, &val);
+
   /* listen */
   if(listen(read_socket, 5) < 0){
     perror("listen");
@@ -129,9 +134,14 @@ int main(int argc, char const* argv[])
   /* wait connection */
   while(1){
     if((write_socket = accept(read_socket, (struct sockaddr*)&write_addr, (socklen_t*)&write_len)) < 0){
-      perror("accept");
-      std::cerr << "failed to accept" << std::endl;
-      exit(1);
+      if(errno == EAGAIN){
+        sleep(1);
+        continue;
+      }else{
+        perror("accept");
+        std::cerr << "failed to accept" << std::endl;
+        exit(1);
+      }
     }
 
     http_res(write_socket);
