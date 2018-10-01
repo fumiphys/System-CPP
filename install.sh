@@ -22,5 +22,6 @@ cd ..
 mkdir -p test/c_server/files
 cp Network/index.html test/c_server/files/
 cp build/Network/http_server test/c_server/files/
+cp build/Network/http_threadserver test/c_server/files/
 cp build/Network/https_server test/c_server/files/
 cp build/Network/socket_server test/c_server/files/
