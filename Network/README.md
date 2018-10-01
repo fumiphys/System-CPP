@@ -8,12 +8,12 @@ nc localhost 3000
 curl "http://localhost:3000/index.html"
 ```
 
+## http_threadserver   : http connection with threading
+```
+curl "http://localhost:3000/index.html"
+```
+
 ## https_server  : https connection
 ```
 ./Network/https_client
 ```
-
-# TODO
-- non blocking mode (currently use sleep)
-- speed up
-- threading
