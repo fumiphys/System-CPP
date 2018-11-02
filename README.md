@@ -1,5 +1,8 @@
 # System-CPP
-C++ functions for Network, DB...
+C++ functions for Network, DB...  
+Final goal is to build a system on my own OS which has my own server systems, my own DBs, my own shells, my own compilers etc.
+
+# contents
  - [Network](Network/)
  - [Database](Database/)
  - [Compiler](Compiler/)
