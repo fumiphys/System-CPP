@@ -25,3 +25,6 @@ cp build/Network/http_server test/c_server/files/
 cp build/Network/http_threadserver test/c_server/files/
 cp build/Network/https_server test/c_server/files/
 cp build/Network/socket_server test/c_server/files/
+
+mkdir -p test/Compiler
+cp build/Compiler/fcc test/Compiler/

@@ -39,3 +39,6 @@ build/
 *.csr
 
 test/c_server/files
+test/Compiler/fcc
+test/Compiler/tmp.s
+test/Compiler/tmp
